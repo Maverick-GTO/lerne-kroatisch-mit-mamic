@@ -21,7 +21,7 @@
         }
 
         body {
-            font-family: -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--dinamo-blue);
             margin: 0;
             display: flex;
@@ -68,7 +68,7 @@
 
         #splash-img { width: 90%; height: 90%; object-fit: contain; z-index: 10; }
 
-        /* Container Styles */
+        /* Container */
         .container {
             width: 90%; max-width: 500px;
             background: var(--white);
@@ -78,9 +78,8 @@
             box-sizing: border-box; color: #333;
         }
 
-        h2 { color: var(--dinamo-blue); margin-top: 0; }
-        .timer-box { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: var(--dinamo-blue); }
-        .question-box { font-size: 1.3rem; font-weight: bold; margin: 20px 0; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        .timer-box { font-size: 1.3rem; font-weight: bold; color: var(--dinamo-blue); margin-bottom: 10px; }
+        .question-box { font-size: 1.4rem; font-weight: bold; margin: 20px 0; min-height: 80px; display: flex; align-items: center; justify-content: center; }
 
         .option {
             display: block; width: 100%; padding: 16px; margin: 10px 0;
@@ -92,14 +91,18 @@
         .wrong { background: var(--error) !important; color: white; border-color: var(--error); }
 
         table { width: 100%; margin: 15px 0; border-collapse: collapse; font-size: 0.9rem; }
-        th, td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }
+        th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
         
         .btn-action {
             background: var(--dinamo-blue); color: white; padding: 15px;
             border: none; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1.1rem;
         }
 
-        #start-screen { display: none; }
+        input[type="text"] {
+            width: 100%; padding: 15px; margin: 15px 0;
+            border-radius: 10px; border: 2px solid #ddd;
+            box-sizing: border-box; font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -114,14 +117,12 @@
 
     <div id="start-screen" class="container">
         <h2>Mamic Quiz</h2>
-        <p>Bist du ein Kroatisch-Genie oder ein gewöhnlicher Klošar?</p>
-        
+        <p>Bist du ein Kroatisch-Genie?</p>
         <h3>Top 3 Bestenliste</h3>
         <table>
-            <thead><tr><th>Platz</th><th>Name</th><th>Zeit (inkl. Fehler)</th></tr></thead>
+            <thead><tr><th>Platz</th><th>Name</th><th>Gesamtzeit</th></tr></thead>
             <tbody id="start-leaderboard-body"></tbody>
         </table>
-
         <button class="btn-action" onclick="startGame()">Starte das Spiel</button>
     </div>
 
@@ -135,9 +136,8 @@
     <div id="result-screen" class="container">
         <h2 id="rank-display">Ergebnis</h2>
         <p id="stats-summary" style="background: #f8f8f8; padding: 15px; border-radius: 10px; font-size: 0.9rem;"></p>
-        
         <div id="name-input-section">
-            <input type="text" id="user-name" placeholder="Dein Name" maxlength="15" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box;">
+            <input type="text" id="user-name" placeholder="Dein Name" maxlength="15">
             <button class="btn-action" onclick="saveScore()">Speichern & Beenden</button>
         </div>
         <button class="btn-action" style="margin-top: 15px; background: #555;" onclick="location.reload()">Neustart</button>
@@ -145,7 +145,7 @@
 
     <script>
         const quizData = [
-            { q: "Pa jesmo li mi Corleoneovi?!", a: "Sind wir etwa die Corleones?!", w1: "Ich ich etwa Don Corleone?", w2: "Haben wir die Familie Corleoni im Kopf?" },
+            { q: "Pa jesmo li mi Corleoneovi?!", a: "Sind wir etwa die Corleones?!", w1: "Bin ich etwa Don Corleone?", w2: "Haben wir die Familie Corleoni im Kopf?" },
             { q: "Reci mi molim te gdje ste mi se ispričali.", a: "Sag mir bitte, wo ihr euch bei mir entschuldigt habt.", w1: "Sag mir bitte, wo sich die Entschuldigung versteckt.", w2: "Zeige mir den Ort, an dem das Bedauern wohnt." },
             { q: "Ne primam ga na bulju, i ne volim one koji ga primaju u bulju.", a: "Ich nehme ihn nicht als Gast auf und ich mag diejenigen nicht, die ihn als Gast aufnehmen.", w1: "Ich lade ihn nicht ins Sitzkissen der Götter.", w2: "Ich misstraue Menschen, die Argumente nutzen." },
             { q: "Mi smo dio civilizirane velike Europe, velike scene.", a: "Wir sind Teil des zivilisierten Gross-Europas, der grossen Bühne.", w1: "Europa ist gross, weil der Vorhang der Nacht fällt.", w2: "Wir sind Statisten im Opernhaus der Welt." },
@@ -171,26 +171,20 @@
         let shuffledQuestions = [];
 
         function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
-
         function formatTime(totalSeconds) {
             const m = Math.floor(totalSeconds / 60);
             const s = Math.floor(totalSeconds % 60);
             return `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        // 1. Splash Screen Timer
         setTimeout(() => {
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('splash-screen').style.display = 'none';
-                showStartScreen();
+                document.getElementById('start-screen').style.display = 'block';
+                renderStartLeaderboard();
             }, 500);
         }, 3000);
-
-        function showStartScreen() {
-            document.getElementById('start-screen').style.display = 'block';
-            renderStartLeaderboard();
-        }
 
         function startGame() {
             document.getElementById('start-screen').style.display = 'none';
@@ -199,8 +193,7 @@
             currentIdx = 0; score = 0; errors = 0;
             startTime = Date.now();
             timerInterval = setInterval(() => {
-                const elapsed = (Date.now() - startTime) / 1000;
-                document.getElementById('timer').innerText = formatTime(elapsed);
+                document.getElementById('timer').innerText = formatTime((Date.now() - startTime) / 1000);
             }, 1000);
             showQuestion();
         }
@@ -234,24 +227,13 @@
         function endQuiz() {
             clearInterval(timerInterval);
             const rawTime = (Date.now() - startTime) / 1000;
-            const penalty = errors * 15; // 15s pro Fehler
+            const penalty = errors * 15;
             const total = rawTime + penalty;
             window.sessionResults = { rawTime, errors, total };
-
             document.getElementById('quiz-container').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
-            
-            let rank = "";
-            if (score === 20) rank = "Kroatisch-Genie";
-            else if (score >= 16) rank = "Fast ein Mamic";
-            else if (score >= 11) rank = "Ordentlicher Klošar";
-            else if (score >= 6) rank = "Da geht noch mehr";
-            else if (score >= 1) rank = "Journalistischer Abschaum";
-            else rank = "Du bist eine Null";
-
-            document.getElementById('rank-display').innerText = rank;
-            document.getElementById('stats-summary').innerText = 
-                `Zeit: ${formatTime(rawTime)} | Fehler: ${errors} (+${penalty}s) | Gesamt: ${formatTime(total)}`;
+            document.getElementById('rank-display').innerText = score === 20 ? "Kroatisch-Genie" : (score >= 12 ? "Ordentlicher Klošar" : "Du bist eine Null");
+            document.getElementById('stats-summary').innerText = `Zeit: ${formatTime(rawTime)} | Fehler: ${errors} (+${penalty}s) | Gesamt: ${formatTime(total)}`;
         }
 
         function saveScore() {
@@ -266,14 +248,15 @@
         function renderStartLeaderboard() {
             const board = JSON.parse(localStorage.getItem('mamic_top5')) || [];
             const top3 = board.slice(0, 3);
-            const body = document.getElementById('start-leaderboard-body');
-            body.innerHTML = top3.length > 0 
+            document.getElementById('start-leaderboard-body').innerHTML = top3.length > 0 
                 ? top3.map((e, i) => `<tr><td>${i+1}</td><td>${e.name}</td><td>${formatTime(e.total)}</td></tr>`).join('')
                 : '<tr><td colspan="3">Noch keine Einträge</td></tr>';
         }
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
+            });
         }
     </script>
 </body>

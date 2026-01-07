@@ -1,17 +1,16 @@
 {
   "name": "Lerne Kroatisch mit Mamic",
   "short_name": "Mamic App",
-  "description": "Lerne Kroatisch mit den besten Sprüchen von Mamic.",
+  "description": "Lerne Kroatisch mit Mamic",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#00529B",
+  "background_color": "#050505",
   "theme_color": "#00529B",
   "icons": [
     {
       "src": "logo.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }

@@ -31,7 +31,7 @@
             overflow: hidden;
         }
 
-        /* Splash Screen Fix: Schlange direkt am Bild */
+        /* Splash Screen */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -46,12 +46,8 @@
 
         .neon-wrapper {
             position: relative;
-            width: 280px; 
-            height: 280px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 20px;
+            width: 280px; height: 280px;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .neon-line {
@@ -61,7 +57,6 @@
             border-radius: 20px;
             filter: drop-shadow(0 0 10px var(--neon-blue));
             animation: snake 3s linear infinite;
-            z-index: 5;
         }
 
         @keyframes snake {
@@ -71,13 +66,9 @@
             75% { clip-path: inset(0 97% 0 0); }
         }
 
-        #splash-img {
-            width: 90%;
-            height: 90%;
-            object-fit: contain;
-            z-index: 10;
-        }
+        #splash-img { width: 90%; height: 90%; object-fit: contain; z-index: 10; }
 
+        /* Container Styles */
         .container {
             width: 90%; max-width: 500px;
             background: var(--white);
@@ -87,32 +78,28 @@
             box-sizing: border-box; color: #333;
         }
 
-        .timer-box { font-size: 1.3rem; font-weight: bold; color: var(--dinamo-blue); margin-bottom: 15px; }
-        .question-box { font-size: 1.4rem; font-weight: bold; margin: 20px 0; min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        h2 { color: var(--dinamo-blue); margin-top: 0; }
+        .timer-box { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; color: var(--dinamo-blue); }
+        .question-box { font-size: 1.3rem; font-weight: bold; margin: 20px 0; min-height: 80px; display: flex; align-items: center; justify-content: center; }
 
         .option {
-            display: block; width: 100%; padding: 16px; margin: 12px 0;
+            display: block; width: 100%; padding: 16px; margin: 10px 0;
             border: 2px solid var(--dinamo-blue); border-radius: 12px;
             background: var(--white); font-size: 1rem; font-weight: 600; cursor: pointer;
-            transition: background 0.2s;
         }
 
         .correct { background: var(--success) !important; color: white; border-color: var(--success); }
         .wrong { background: var(--error) !important; color: white; border-color: var(--error); }
 
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 0.85rem; }
-        th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
+        table { width: 100%; margin: 15px 0; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }
         
-        input[type="text"] {
-            width: 100%; padding: 15px; margin: 15px 0;
-            border-radius: 10px; border: 2px solid #ddd;
-            box-sizing: border-box; font-size: 1rem;
-        }
-
         .btn-action {
             background: var(--dinamo-blue); color: white; padding: 15px;
-            border: none; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer;
+            border: none; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1.1rem;
         }
+
+        #start-screen { display: none; }
     </style>
 </head>
 <body>
@@ -125,8 +112,21 @@
         <h1 style="color: white; font-size: 1.5rem; margin-top: 40px; letter-spacing: 3px;">DINAMO ZAGREB</h1>
     </div>
 
+    <div id="start-screen" class="container">
+        <h2>Mamic Quiz</h2>
+        <p>Bist du ein Kroatisch-Genie oder ein gewöhnlicher Klošar?</p>
+        
+        <h3>Top 3 Bestenliste</h3>
+        <table>
+            <thead><tr><th>Platz</th><th>Name</th><th>Zeit (inkl. Fehler)</th></tr></thead>
+            <tbody id="start-leaderboard-body"></tbody>
+        </table>
+
+        <button class="btn-action" onclick="startGame()">Starte das Spiel</button>
+    </div>
+
     <div id="quiz-container" class="container">
-        <div class="timer-box">Zeit: <span id="timer">0.0</span>s</div>
+        <div class="timer-box">Zeit: <span id="timer">0:00</span></div>
         <div id="progress">Frage 1 / 20</div>
         <div class="question-box" id="question-text"></div>
         <div id="options-container"></div>
@@ -135,28 +135,24 @@
     <div id="result-screen" class="container">
         <h2 id="rank-display">Ergebnis</h2>
         <p id="stats-summary" style="background: #f8f8f8; padding: 15px; border-radius: 10px; font-size: 0.9rem;"></p>
+        
         <div id="name-input-section">
-            <input type="text" id="user-name" placeholder="Dein Name" maxlength="15">
-            <button class="btn-action" onclick="saveScore()">Speichern</button>
+            <input type="text" id="user-name" placeholder="Dein Name" maxlength="15" style="width:100%; padding:12px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc; box-sizing:border-box;">
+            <button class="btn-action" onclick="saveScore()">Speichern & Beenden</button>
         </div>
-        <h3>Top 5 Bestenliste</h3>
-        <table>
-            <thead><tr><th>Name</th><th>Zeit</th><th>Fehler</th><th>Gesamt</th></tr></thead>
-            <tbody id="leaderboard-body"></tbody>
-        </table>
-        <button class="btn-action" style="margin-top: 20px; background: #555;" onclick="location.reload()">Neustart</button>
+        <button class="btn-action" style="margin-top: 15px; background: #555;" onclick="location.reload()">Neustart</button>
     </div>
 
     <script>
         const quizData = [
-            { q: "Pa jesmo li mi Corleoneovi?", a: "Sind wir etwa die Corleones?!", w1: "Bin ich etwa Don Corleone?", w2: "Sind wir hier eine Corleone Familie oder bereits ein soziologisches Fallbeispiel?" },
+            { q: "Pa jesmo li mi Corleoneovi?!", a: "Sind wir etwa die Corleones?!", w1: "Ich ich etwa Don Corleone?", w2: "Haben wir die Familie Corleoni im Kopf?" },
             { q: "Reci mi molim te gdje ste mi se ispričali.", a: "Sag mir bitte, wo ihr euch bei mir entschuldigt habt.", w1: "Sag mir bitte, wo sich die Entschuldigung versteckt.", w2: "Zeige mir den Ort, an dem das Bedauern wohnt." },
             { q: "Ne primam ga na bulju, i ne volim one koji ga primaju u bulju.", a: "Ich nehme ihn nicht als Gast auf und ich mag diejenigen nicht, die ihn als Gast aufnehmen.", w1: "Ich lade ihn nicht ins Sitzkissen der Götter.", w2: "Ich misstraue Menschen, die Argumente nutzen." },
             { q: "Mi smo dio civilizirane velike Europe, velike scene.", a: "Wir sind Teil des zivilisierten Gross-Europas, der grossen Bühne.", w1: "Europa ist gross, weil der Vorhang der Nacht fällt.", w2: "Wir sind Statisten im Opernhaus der Welt." },
-            { q: "Kad radi Modrić?", a: "Wann arbeitet Modrić?", w1: "Wann arbeitet Modrić an sich selbst?", w2: "Zu welcher Uhrzeit wird Modrić müde?" },
+            { q: "Kad radi Modrić?", a: "Wann arbeitet Modrić?", w1: "Wann arbeitet Modric an sich selbst?", w2: "Zu welcher Uhrzeit wird Modric müde?" },
             { q: "Jebem vam mater svima!", a: "Ich ficke euch allen die Mutter!", w1: "Die Mutter aller Theorien applaudiert euch.", w2: "Ich umarme eure genealogische Mutter." },
             { q: "Govna jedna, svi ste vi govna!", a: "Ihr seid allesamt Scheisse, nichts als Scheisse!", w1: "Ihr seid die Null, die den Abfall denkt.", w2: "Die Masse produziert sich selbst als Kot." },
-            { q: "Serem vam se u usta!", a: "Ich scheisse euch ins Maul!", w1: "Ich rezitiere aus meinem Mund ein Gedicht!", w2: "Der Mund wird zum Parlament der Mythen." },
+            { q: "Serem vam se u usta!", a: "Ich scheisse euch ins Maul!", w1: "Ich rezitiere aus meinem Mund ein Gedicht.", w2: "Der Mund wird zum Parlament der Mythen." },
             { q: "Jebat ću vam mater do kraja života!", a: "Ich werde euch bis ans Lebensende die Mutter ficken!", w1: "Ich diskutiere eure Biografie bis zur Rente.", w2: "Die Ewigkeit heiratet den Stammbaum." },
             { q: "Smradovi jedni, pička vam materina!", a: "Ihr Stinker, verfickte Hurensöhne!", w1: "Ihr seid olfaktorische Fussnoten der Natur.", w2: "Der Geruch denkt zuerst, dann kommt das Wort." },
             { q: "Ko ste vi da mene sudite, jebem vam sve po spisku!", a: "Wer seid ihr, dass ihr über mich richtet? Ich ficke euch alles, was ihr habt!", w1: "Wer seid ihr, dass ihr den Richter träumt?", w2: "Die Liste verurteilt sich selbst alphabetisch." },
@@ -166,7 +162,7 @@
             { q: "Mrš u pičku materinu!", a: "Verpisst euch zur Hurenmutter!", w1: "Geh zurück in die Eizelle.", w2: "Verlasse den Privatbereich über den Hinterausgang." },
             { q: "Smeće jedno novinarsko!", a: "Journalistischer Abschaum!", w1: "Die Schlagzeile recycelt den Reporter.", w2: "Der Müll schreibt Leitartikel." },
             { q: "Ja sam vas sve stvorio, govna nezahvalna!", a: "Ich habe euch alle erschaffen, undankbare Scheisskerle!", w1: "Ich habe euch im Seminar erfunden.", w2: "Der Schöpfer verlangt nach einer Oper." },
-            { q: "Jebem te na klinac.", a: "Du bist mir völlig egal.", w1: "Ich hänge dich an den Nagel der Bedeutungslosigkeit.", w2: "Deine Relevanz tendiert gegen null." },
+            { q: "Jebem te na klinac.", a: "Du bist mir völlig egal.", w1: "Ich hänge dich an den Nagel der Bedeutung.", w2: "Der Keil denkt dich weg." },
             { q: "Prebit ću te kao mačku.", a: "Ich werde dich verprügeln wie eine Katze.", w1: "Ich falte dich wie ein argumentatives Hemd.", w2: "Die Gewalt übt Yoga an der Logik." },
             { q: "Sveti Amsterdame, ti si plavi glupac.", a: "Heiliger Amsterdam, du bist ein blauer Idiot.", w1: "Heiliger Stadtplan, du bist blau vor Ideen.", w2: "Du passt nicht ins Stadtbild." }
         ];
@@ -176,21 +172,36 @@
 
         function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
 
+        function formatTime(totalSeconds) {
+            const m = Math.floor(totalSeconds / 60);
+            const s = Math.floor(totalSeconds % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // 1. Splash Screen Timer
         setTimeout(() => {
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('splash-screen').style.display = 'none';
-                document.getElementById('quiz-container').style.display = 'block';
-                startQuiz();
+                showStartScreen();
             }, 500);
         }, 3000);
 
-        function startQuiz() {
+        function showStartScreen() {
+            document.getElementById('start-screen').style.display = 'block';
+            renderStartLeaderboard();
+        }
+
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
             shuffledQuestions = shuffle([...quizData]);
+            currentIdx = 0; score = 0; errors = 0;
             startTime = Date.now();
             timerInterval = setInterval(() => {
-                document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1);
-            }, 100);
+                const elapsed = (Date.now() - startTime) / 1000;
+                document.getElementById('timer').innerText = formatTime(elapsed);
+            }, 1000);
             showQuestion();
         }
 
@@ -223,13 +234,24 @@
         function endQuiz() {
             clearInterval(timerInterval);
             const rawTime = (Date.now() - startTime) / 1000;
-            const total = rawTime + (errors * 10);
+            const penalty = errors * 15; // 15s pro Fehler
+            const total = rawTime + penalty;
             window.sessionResults = { rawTime, errors, total };
+
             document.getElementById('quiz-container').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
-            document.getElementById('rank-display').innerText = score === 20 ? "Kroatisch Genie" : (score >= 12 ? "Ordentlicher Klošar" : "Du bist eine Null");
-            document.getElementById('stats-summary').innerText = `Zeit: ${rawTime.toFixed(1)}s | Fehler: ${errors} (+${errors * 10}s) | Gesamt: ${total.toFixed(1)}s`;
-            renderLeaderboard();
+            
+            let rank = "";
+            if (score === 20) rank = "Kroatisch-Genie";
+            else if (score >= 16) rank = "Fast ein Mamic";
+            else if (score >= 11) rank = "Ordentlicher Klošar";
+            else if (score >= 6) rank = "Da geht noch mehr";
+            else if (score >= 1) rank = "Journalistischer Abschaum";
+            else rank = "Du bist eine Null";
+
+            document.getElementById('rank-display').innerText = rank;
+            document.getElementById('stats-summary').innerText = 
+                `Zeit: ${formatTime(rawTime)} | Fehler: ${errors} (+${penalty}s) | Gesamt: ${formatTime(total)}`;
         }
 
         function saveScore() {
@@ -238,15 +260,16 @@
             board.push({ name, ...window.sessionResults });
             board.sort((a, b) => a.total - b.total);
             localStorage.setItem('mamic_top5', JSON.stringify(board.slice(0, 5)));
-            document.getElementById('name-input-section').style.display = 'none';
-            renderLeaderboard();
+            location.reload();
         }
 
-        function renderLeaderboard() {
+        function renderStartLeaderboard() {
             const board = JSON.parse(localStorage.getItem('mamic_top5')) || [];
-            document.getElementById('leaderboard-body').innerHTML = board.map(e => 
-                `<tr><td>${e.name}</td><td>${e.rawTime.toFixed(1)}s</td><td>${e.errors}</td><td><b>${e.total.toFixed(1)}s</b></td></tr>`
-            ).join('');
+            const top3 = board.slice(0, 3);
+            const body = document.getElementById('start-leaderboard-body');
+            body.innerHTML = top3.length > 0 
+                ? top3.map((e, i) => `<tr><td>${i+1}</td><td>${e.name}</td><td>${formatTime(e.total)}</td></tr>`).join('')
+                : '<tr><td colspan="3">Noch keine Einträge</td></tr>';
         }
 
         if ('serviceWorker' in navigator) {

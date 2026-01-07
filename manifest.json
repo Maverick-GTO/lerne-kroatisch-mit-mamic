@@ -1,16 +1,18 @@
 {
   "name": "Lerne Kroatisch mit Mamic",
-  "short_name": "Mamic App",
-  "description": "Lerne Kroatisch mit Mamic",
-  "start_url": "index.html",
+  "short_name": "Mamic Quiz",
+  "description": "Das ultimative Mamic Quiz",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#050505",
   "theme_color": "#00529B",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "logo.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

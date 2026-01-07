@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lerne Kroatisch mit Mamic</title>
+    <style>
+        :root {
+            --dinamo-blue: #00529B;
+            --croatia-red: #FF0000;
+            --white: #FFFFFF;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--dinamo-blue);
+            color: var(--white);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #splash-screen img { width: 200px; }
+        .card {
+            background: var(--white);
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 500px;
+            display: none;
+        }
+        .question { font-size: 1.5rem; margin-bottom: 20px; font-weight: bold; }
+        .option {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid var(--dinamo-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .correct { background-color: #4CAF50 !important; color: white; }
+        .wrong { background-color: #f44336 !important; color: white; }
+        #result-screen { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <img src="logo.png" alt="Dinamo Zagreb Logo">
+    </div>
+
+    <div id="quiz-container" class="card">
+        <div id="progress">Frage 1 von 20</div>
+        <div class="question" id="kroatisch-text"></div>
+        <div id="options-container"></div>
+    </div>
+
+    <div id="result-screen" class="card">
+        <h2>Ergebnis</h2>
+        <div id="score-display" style="font-size: 2rem; margin: 20px 0;"></div>
+        <div id="rank-display" style="font-weight: bold; color: var(--dinamo-blue);"></div>
+        <button onclick="location.reload()" class="option" style="margin-top:20px;">Nochmal spielen</button>
+    </div>
+
+    <script>
+        const quizData = [
+            { q: "Pa jesmo li mi Corleoneovi?!", a: "Sind wir etwa die Corleones?!", w1: "Ich bin Don Corleone", w2: "aben wir die Familie Corleoni im Kopf" },
+            { q: "Reci mi molim te gdje ste mi se ispričali.", a: "Sag mir bitte, wo ihr euch bei mir entschuldigt habt.", w1: "Sag mir bitte, wo sich die Entschuldigung", w2: "Zeige mir den Ort, an dem das Bedauern" },
+            { q: "Ne primam ga na bulju, i ne volim one koji ga primaju u bulju.", a: "Ich nehme ihn nicht als Gast auf und ich mag diejenigen nicht, die ihn als Gast aufnehmen.", w1: "Ich lade ihn nicht ins Sitzkissen der Götter", w2: "Ich misstraue Menschen, die Argumente" },
+            { q: "Mi smo dio civilizirane velike Europe, velike scene.", a: "Wir sind Teil des zivilisierten Gross-Europas, der grossen Bühne.", w1: "Europa ist gross, weil der Vorhang der Nacht", w2: "Wir sind Statisten im Opernhaus der Welt" },
+            { q: "Kad radi Modrić?", a: "Wann arbeitet Modrić?", w1: "Wann arbeitet Modric an sich selbst?", w2: "Zu welcher Uhrzeit wird Modric müde?" },
+            { q: "Jebem vam mater svima!", a: "Ich ficke euch allen die Mutter!", w1: "Die Mutter aller Theorien applaudiert", w2: "Ich umarme eure genealogische Mutter" },
+            { q: "Govna jedna, svi ste vi govna!", a: "Ihr seid allesamt Scheisse, nichts als Scheisse!", w1: "Ihr seid die Null, die den Abfall denkt.", w2: "Die Masse produziert sich selbst als Kot" },
+            { q: "Serem vam se u usta!", a: "Ich scheisse euch ins Maul!", w1: "Ich rezitiere aus meinm Mund ein Gedicht", w2: "Der Mund wird zum Parlament der Mythen" },
+            { q: "Jebat ću vam mater do kraja života!", a: "Ich werde euch bis ans Lebensende die Mutter ficken!", w1: "Ich diskutiere eure Biografie bis zur Rente", w2: "Die Ewigkeit heiratet den Stammbaum" },
+            { q: "Smradovi jedni, pička vam materina!", a: "Ihr Stinker, verfickte Hurensöhne!", w1: "Ihr seid olfaktorische Fussnoten der Natur", w2: "Der Geruch denkt zuerst, dann kommt" },
+            { q: "Ko ste vi da mene sudite, jebem vam sve po spisku!", a: "Wer seid ihr, dass ihr über mich richtet? Ich ficke euch alles, was ihr habt!", w1: "Wer seid ihr, dass ihr den Richter träumt", w2: "Die Liste verurteilt sich selbst alphabetisch" },
+            { q: "Ja sam za vas institucija, a vi ste goli kurac!", a: "Ich bin für euch eine Institution, und ihr seid ein nackter Schwanz!", w1: "Ich bin das Gebäude, ihr seid die Architekten", w2: "Die Institution trägt keine Hosen, nur" },
+            { q: "Ne možete mi ništa, jebem vam državu!", a: "Ihr könnt mir nichts, ich ficke euren Staat!", w1: "Der Staat stolpert über seine eigenen Beine", w2: "Nationale Souveränität ist ein leeres Wort" },
+            { q: "Svi ste vi obični klošari!", a: "Ihr seid allesamt gewöhnliche Penner!", w1: "Ihr seid Nomaden der Grammatik.", w2: "Das Gewöhnliche schläft unter der Brücke" },
+            { q: "Mrš u pičku materinu!", a: "Verpisst euch zur Hurenmutter!", w1: "Geh zurück in die Eizelle.", w2: "Verlasse den Satzbau über den Hinterausgang" },
+            { q: "Smeće jedno novinarsko!", a: "Journalistischer Abschaum!", w1: "Die Schlagzeile recycelt den Reporter.", w2: "Der Müll schreibt Leitartikel." },
+            { q: "Ja sam vas sve stvorio, govna nezahvalna!", a: "Ich habe euch alle erschaffen, undankbare Scheisskerle!", w1: "Ich habe euch im Seminar erfunden", w2: "Der Schöpfer verlangt nach einer Oper" },
+            { q: "Jebem te na klinac.", a: "Du bist mir völlig egal", w1: "Ich hänge dich an den Nagel der Bedeutung", w2: "Der Keil denkt dich weg." },
+            { q: "Prebit ću te kao mačku.", a: "Ich werde dich verprügeln wie eine Katze", w1: "Ich falte dich wie ein argumentatives Hemd", w2: "Die Gewalt übt Yoga an der Logik." },
+            { q: "Sveti Amsterdame, ti si plavi glupac.", a: "Heiliger Amsterdam, du bist ein blauer Idiot.", w1: "Heiliger Stadtplan, du bist blau vor Ideen", w2: "Du passt nicht ins Stadtbild." }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        const shuffledQuestions = shuffle([...quizData]);
+
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            showQuestion();
+        }, 3000);
+
+        function showQuestion() {
+            if (currentQuestion >= 20) {
+                showResult();
+                return;
+            }
+
+            const data = shuffledQuestions[currentQuestion];
+            document.getElementById('progress').innerText = `Frage ${currentQuestion + 1} von 20`;
+            document.getElementById('kroatisch-text').innerText = data.q;
+            
+            const options = shuffle([data.a, data.w1, data.w2]);
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(btn, opt, data.a);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, selected, correct) {
+            const allBtns = document.querySelectorAll('.option');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selected === correct) {
+                score++;
+                btn.classList.add('correct');
+                setTimeout(nextQuestion, 1000);
+            } else {
+                btn.classList.add('wrong');
+                allBtns.forEach(b => {
+                    if (b.innerText === correct) b.classList.add('correct');
+                });
+                setTimeout(nextQuestion, 2000);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function showResult() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('score-display').innerText = `${score} / 20`;
+            
+            let rank = "";
+            if (score === 20) rank = "Kroatisch-Genie";
+            else if (score >= 16) rank = "Fast ein Mamic";
+            else if (score >= 11) rank = "Ordentlicher Klošar";
+            else if (score >= 6) rank = "Da geht noch mehr";
+            else if (score >= 1) rank = "Journalistischer Abschaum";
+            else rank = "Du bist eine Null";
+            
+            document.getElementById('rank-display').innerText = rank;
+        }
+    </script>
+</body>
+</html>

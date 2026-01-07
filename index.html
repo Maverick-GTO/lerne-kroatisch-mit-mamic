@@ -13,19 +13,18 @@
     <style>
         :root {
             --dinamo-blue: #00529B;
+            --neon-blue: #00f2ff;
             --croatia-red: #FF0000;
             --white: #FFFFFF;
-            --light-grey: #f4f4f4;
-            --success-green: #28a745;
-            --error-red: #dc3545;
+            --success: #28a745;
+            --error: #dc3545;
+            --black: #050505;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--dinamo-blue);
-            color: var(--white);
             margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,45 +32,69 @@
             overflow: hidden;
         }
 
+        /* Splash Screen mit Neon-Schlange */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--white);
+            background: var(--black);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
+            z-index: 3000;
             transition: opacity 0.5s ease;
         }
-        #splash-screen img { width: 180px; height: auto; margin-bottom: 20px; }
-        #splash-screen h1 { color: var(--dinamo-blue); font-size: 1.2rem; }
 
+        .neon-wrapper {
+            position: relative;
+            width: 80vw;
+            height: 80vw;
+            max-width: 350px;
+            max-height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .neon-line {
+            position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border: 4px solid var(--neon-blue);
+            border-radius: 20px;
+            filter: drop-shadow(0 0 15px var(--neon-blue));
+            animation: snake 3s linear infinite;
+        }
+
+        @keyframes snake {
+            0%, 100% { clip-path: inset(0 0 95% 0); }
+            25% { clip-path: inset(0 0 0 95%); }
+            50% { clip-path: inset(95% 0 0 0); }
+            75% { clip-path: inset(0 95% 0 0); }
+        }
+
+        #splash-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 10;
+        }
+
+        /* Haupt-Container */
         .container {
             width: 90%;
             max-width: 500px;
             background: var(--white);
-            border-radius: 20px;
+            border-radius: 25px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            color: #333;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             text-align: center;
             display: none;
             box-sizing: border-box;
+            color: #333;
         }
 
-        .progress-bar { font-size: 0.9rem; color: #666; margin-bottom: 10px; }
-        .question-box { 
-            font-size: 1.4rem; 
-            font-weight: bold; 
-            margin-bottom: 25px; 
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 2px solid var(--light-grey);
-            padding-bottom: 15px;
-        }
+        .timer-box { font-size: 1.3rem; font-weight: bold; color: var(--dinamo-blue); margin-bottom: 15px; }
+        .question-box { font-size: 1.4rem; font-weight: bold; margin: 20px 0; min-height: 80px; display: flex; align-items: center; justify-content: center; }
 
         .option {
             display: block;
@@ -82,50 +105,80 @@
             border-radius: 12px;
             background: var(--white);
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-sizing: border-box;
+            transition: 0.2s;
         }
 
-        .option:active { transform: scale(0.98); }
+        .correct { background: var(--success) !important; color: white; border-color: var(--success); }
+        .wrong { background: var(--error) !important; color: white; border-color: var(--error); }
 
-        .correct { background-color: var(--success-green) !important; color: white !important; border-color: var(--success-green) !important; }
-        .wrong { background-color: var(--error-red) !important; color: white !important; border-color: var(--error-red) !important; }
-
-        #result-screen h2 { color: var(--dinamo-blue); font-size: 2rem; margin-top: 0; }
-        .score-box { font-size: 3.5rem; font-weight: 900; color: var(--croatia-red); margin: 10px 0; }
-        .rank-text { font-size: 1.3rem; font-weight: bold; margin-bottom: 25px; }
+        /* Bestenliste */
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { border-bottom: 1px solid #eee; padding: 10px; text-align: left; }
         
-        button.restart-btn {
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .btn-action {
             background: var(--dinamo-blue);
             color: white;
+            padding: 15px;
             border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            border-radius: 12px;
             cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <img src="logo.png" alt="Dinamo Logo">
-        <h1>Lerne Kroatisch mit Mamic</h1>
+        <div class="neon-wrapper">
+            <div class="neon-line"></div>
+            <img src="splash_logo.png" alt="Dinamo Logo" id="splash-img">
+        </div>
+        <h1 style="color: white; font-size: 1.5rem; margin-top: 40px; letter-spacing: 3px;">DINAMO ZAGREB</h1>
     </div>
 
     <div id="quiz-container" class="container">
-        <div class="progress-bar" id="progress">Frage 1 von 20</div>
-        <div class="question-box" id="question-text">Lade Frage...</div>
+        <div class="timer-box">Zeit: <span id="timer">0.0</span>s</div>
+        <div id="progress">Frage 1 / 20</div>
+        <div class="question-box" id="question-text"></div>
         <div id="options-container"></div>
     </div>
 
     <div id="result-screen" class="container">
-        <h2>Ergebnis</h2>
-        <div class="score-box" id="score-display">0/20</div>
-        <div class="rank-text" id="rank-display">-</div>
-        <button class="restart-btn" onclick="location.reload()">Nochmal spielen</button>
+        <h2 id="rank-display">Ergebnis</h2>
+        <p id="stats-summary" style="background: #f8f8f8; padding: 15px; border-radius: 10px; font-size: 0.9rem;"></p>
+        
+        <div id="name-input-section">
+            <input type="text" id="user-name" placeholder="Dein Name für die Top 5" maxlength="15">
+            <button class="btn-action" onclick="saveScore()">Speichern</button>
+        </div>
+        
+        <h3>Top 5 Bestenliste</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Zeit</th>
+                    <th>Fehler</th>
+                    <th>Gesamt</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body"></tbody>
+        </table>
+        <button class="btn-action" style="margin-top: 20px; background: #555;" onclick="location.reload()">Neustart</button>
     </div>
 
     <script>
@@ -144,7 +197,7 @@
             { q: "Ja sam za vas institucija, a vi ste goli kurac!", a: "Ich bin für euch eine Institution, und ihr seid ein nackter Schwanz!", w1: "Ich bin das Gebäude, ihr seid die Architekten.", w2: "Die Institution trägt keine Hosen, nur Stolz." },
             { q: "Ne možete mi ništa, jebem vam državu!", a: "Ihr könnt mir nichts, ich ficke euren Staat!", w1: "Der Staat stolpert über seine eigenen Beine.", w2: "Nationale Souveränität ist ein leeres Wort." },
             { q: "Svi ste vi obični klošari!", a: "Ihr seid allesamt gewöhnliche Penner!", w1: "Ihr seid Nomaden der Grammatik.", w2: "Das Gewöhnliche schläft unter der Brücke." },
-            { q: "Mrš u pičku materinu!", a: "Verpisst euch zur Hurenmutter!", w1: "Geh zurück in die Eizelle.", w2: "Verlasse den Satzbau über den Hinterausgang." },
+            { q: "Mrš u pičku materinu!", a: "Verpisst euch zur Hurenmutter!", w1: "Geh zurück in die Eizelle.", w2: "Verlasse den Privatbereich über den Hinterausgang." },
             { q: "Smeće jedno novinarsko!", a: "Journalistischer Abschaum!", w1: "Die Schlagzeile recycelt den Reporter.", w2: "Der Müll schreibt Leitartikel." },
             { q: "Ja sam vas sve stvorio, govna nezahvalna!", a: "Ich habe euch alle erschaffen, undankbare Scheisskerle!", w1: "Ich habe euch im Seminar erfunden.", w2: "Der Schöpfer verlangt nach einer Oper." },
             { q: "Jebem te na klinac.", a: "Du bist mir völlig egal.", w1: "Ich hänge dich an den Nagel der Bedeutung.", w2: "Der Keil denkt dich weg." },
@@ -152,95 +205,83 @@
             { q: "Sveti Amsterdame, ti si plavi glupac.", a: "Heiliger Amsterdam, du bist ein blauer Idiot.", w1: "Heiliger Stadtplan, du bist blau vor Ideen.", w2: "Du passt nicht ins Stadtbild." }
         ];
 
-        let currentQuestionIdx = 0;
-        let score = 0;
+        let currentIdx = 0, score = 0, errors = 0, startTime, timerInterval;
         let shuffledQuestions = [];
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
 
         setTimeout(() => {
-            const splash = document.getElementById('splash-screen');
-            splash.style.opacity = '0';
+            document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => {
-                splash.style.display = 'none';
+                document.getElementById('splash-screen').style.display = 'none';
                 document.getElementById('quiz-container').style.display = 'block';
-                startGame();
+                startQuiz();
             }, 500);
         }, 3000);
 
-        function startGame() {
-            shuffledQuestions = shuffleArray([...quizData]);
-            currentQuestionIdx = 0;
-            score = 0;
+        function startQuiz() {
+            shuffledQuestions = shuffle([...quizData]);
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1);
+            }, 100);
             showQuestion();
         }
 
         function showQuestion() {
-            if (currentQuestionIdx >= shuffledQuestions.length) {
-                showResult();
-                return;
-            }
-
-            const data = shuffledQuestions[currentQuestionIdx];
-            document.getElementById('progress').innerText = `Frage ${currentQuestionIdx + 1} von 20`;
+            if (currentIdx >= shuffledQuestions.length) { endQuiz(); return; }
+            const data = shuffledQuestions[currentIdx];
+            document.getElementById('progress').innerText = `Frage ${currentIdx + 1} / 20`;
             document.getElementById('question-text').innerText = data.q;
-
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
-
-            const options = shuffleArray([data.a, data.w1, data.w2]);
-
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option';
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(btn, opt, data.a);
-                optionsContainer.appendChild(btn);
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            shuffle([data.a, data.w1, data.w2]).forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'option'; b.innerText = opt;
+                b.onclick = () => {
+                    const btns = document.querySelectorAll('.option');
+                    btns.forEach(btn => btn.disabled = true);
+                    if (opt === data.a) {
+                        score++; b.classList.add('correct');
+                        setTimeout(() => { currentIdx++; showQuestion(); }, 800);
+                    } else {
+                        errors++; b.classList.add('wrong');
+                        btns.forEach(btn => { if(btn.innerText === data.a) btn.classList.add('correct'); });
+                        setTimeout(() => { currentIdx++; showQuestion(); }, 1800);
+                    }
+                };
+                container.appendChild(b);
             });
         }
 
-        function checkAnswer(selectedBtn, selectedText, correctText) {
-            const allBtns = document.querySelectorAll('.option');
-            allBtns.forEach(b => b.disabled = true);
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const rawTime = (Date.now() - startTime) / 1000;
+            const total = rawTime + (errors * 10);
+            window.sessionResults = { rawTime, errors, total };
 
-            if (selectedText === correctText) {
-                score++;
-                selectedBtn.classList.add('correct');
-                setTimeout(nextQuestion, 1000);
-            } else {
-                selectedBtn.classList.add('wrong');
-                allBtns.forEach(b => {
-                    if (b.innerText === correctText) b.classList.add('correct');
-                });
-                setTimeout(nextQuestion, 2000);
-            }
-        }
-
-        function nextQuestion() {
-            currentQuestionIdx++;
-            showQuestion();
-        }
-
-        function showResult() {
             document.getElementById('quiz-container').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
-            document.getElementById('score-display').innerText = `${score}/20`;
+            document.getElementById('rank-display').innerText = score === 20 ? "Kroatisch Genie" : (score >= 12 ? "Ordentlicher Klošar" : "Du bist eine Null");
+            document.getElementById('stats-summary').innerText = `Zeit: ${rawTime.toFixed(1)}s | Fehler: ${errors} (+${errors * 10}s) | Gesamt: ${total.toFixed(1)}s`;
+            renderLeaderboard();
+        }
 
-            let rank = "";
-            if (score === 20) rank = "Kroatisch Genie";
-            else if (score >= 16) rank = "Fast ein Mamic";
-            else if (score >= 11) rank = "Ordentlicher Klošar";
-            else if (score >= 6) rank = "Da geht noch mehr";
-            else if (score >= 1) rank = "Journalistischer Abschaum";
-            else rank = "Du bist eine Null";
+        function saveScore() {
+            const name = document.getElementById('user-name').value || "Anonym";
+            let board = JSON.parse(localStorage.getItem('mamic_top5')) || [];
+            board.push({ name, ...window.sessionResults });
+            board.sort((a, b) => a.total - b.total);
+            localStorage.setItem('mamic_top5', JSON.stringify(board.slice(0, 5)));
+            document.getElementById('name-input-section').style.display = 'none';
+            renderLeaderboard();
+        }
 
-            document.getElementById('rank-display').innerText = rank;
+        function renderLeaderboard() {
+            const board = JSON.parse(localStorage.getItem('mamic_top5')) || [];
+            document.getElementById('leaderboard-body').innerHTML = board.map(e => 
+                `<tr><td>${e.name}</td><td>${e.rawTime.toFixed(1)}s</td><td>${e.errors}</td><td><b>${e.total.toFixed(1)}s</b></td></tr>`
+            ).join('');
         }
     </script>
 </body>

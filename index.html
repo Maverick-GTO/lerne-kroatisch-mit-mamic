@@ -133,29 +133,28 @@
         <button class="restart-btn" onclick="location.reload()">Nochmal spielen</button>
     </div>
 
-    <script>
-        const quizData = [
-            { q: "Pa jesmo li mi Corleoneovi?!", a: "Sind wir etwa die Corleones?!", w1: "Ich ich etwa Don Corleone?", w2: "Haben wir die Familie Corleoni im Kopf?" },
-            { q: "Reci mi molim te gdje ste mi se ispričali.", a: "Sag mir bitte, wo ihr euch bei mir entschuldigt habt.", w1: "Sag mir bitte, wo sich die Entschuldigung versteckt", w2: "Zeige mir den Ort, an dem das Bedauern wohnt" },
-            { q: "Ne primam ga na bulju, i ne volim one koji ga primaju u bulju.", a: "Ich nehme ihn nicht als Gast auf und ich mag diejenigen nicht, die ihn als Gast aufnehmen.", w1: "Ich lade ihn nicht ins Sitzkissen der Götter", w2: "Ich misstraue Menschen, die Argumente nutzen" },
-            { q: "Mi smo dio civilizirane velike Europe, velike scene.", a: "Wir sind Teil des zivilisierten Gross-Europas, der grossen Bühne.", w1: "Europa ist gross, weil der Vorhang der Nacht fällt", w2: "Wir sind Statisten im Opernhaus der Welt" },
-            { q: "Kad radi Modrić?", a: "Wann arbeitet Modrić?", w1: "Wann arbeitet Modric an sich selbst?", w2: "Zu welcher Uhrzeit wird Modric müde?" },
-            { q: "Jebem vam mater svima!", a: "Ich ficke euch allen die Mutter!", w1: "Die Mutter aller Theorien applaudiert euch", w2: "Ich umarme eure genealogische Mutter" },
-            { q: "Govna jedna, svi ste vi govna!", a: "Ihr seid allesamt Scheisse, nichts als Scheisse!", w1: "Ihr seid die Null, die den Abfall denkt.", w2: "Die Masse produziert sich selbst als Kot" },
-            { q: "Serem vam se u usta!", a: "Ich scheisse euch ins Maul!", w1: "Ich rezitiere aus meinem Mund ein Gedicht", w2: "Der Mund wird zum Parlament der Mythen" },
-            { q: "Jebat ću vam mater do kraja života!", a: "Ich werde euch bis ans Lebensende die Mutter ficken!", w1: "Ich diskutiere eure Biografie bis zur Rente", w2: "Die Ewigkeit heiratet den Stammbaum" },
-            { q: "Smradovi jedni, pička vam materina!", a: "Ihr Stinker, verfickte Hurensöhne!", w1: "Ihr seid olfaktorische Fussnoten der Natur", w2: "Der Geruch denkt zuerst, dann kommt das Wort" },
-            { q: "Ko ste vi da mene sudite, jebem vam sve po spisku!", a: "Wer seid ihr, dass ihr über mich richtet? Ich ficke euch alles, was ihr habt!", w1: "Wer seid ihr, dass ihr den Richter träumt", w2: "Die Liste verurteilt sich selbst alphabetisch" },
-            { q: "Ja sam za vas institucija, a vi ste goli kurac!", a: "Ich bin für euch eine Institution, und ihr seid ein nackter Schwanz!", w1: "Ich bin das Gebäude, ihr seid die Architekten", w2: "Die Institution trägt keine Hosen, nur Stolz" },
-            { q: "Ne možete mi ništa, jebem vam državu!", a: "Ihr könnt mir nichts, ich ficke euren Staat!", w1: "Der Staat stolpert über seine eigenen Beine", w2: "Nationale Souveränität ist ein leeres Wort" },
-            { q: "Svi ste vi obični klošari!", a: "Ihr seid allesamt gewöhnliche Penner!", w1: "Ihr seid Nomaden der Grammatik.", w2: "Das Gewöhnliche schläft unter der Brücke" },
-            { q: "Mrš u pičku materinu!", a: "Verpisst euch zur Hurenmutter!", w1: "Geh zurück in die Eizelle.", w2: "Verlasse den Satzbau über den Hinterausgang" },
-            { q: "Smeće jedno novinarsko!", a: "Journalistischer Abschaum!", w1: "Die Schlagzeile recycelt den Reporter.", w2: "Der Müll schreibt Leitartikel." },
-            { q: "Ja sam vas sve stvorio, govna nezahvalna!", a: "Ich habe euch alle erschaffen, undankbare Scheisskerle!", w1: "Ich habe euch im Seminar erfunden", w2: "Der Schöpfer verlangt nach einer Oper" },
-            { q: "Jebem te na klinac.", a: "Du bist mir völlig egal", w1: "Ich hänge dich an den Nagel der Bedeutung", w2: "Der Keil denkt dich weg." },
-            { q: "Prebit ću te kao mačku.", a: "Ich werde dich verprügeln wie eine Katze", w1: "Ich falte dich wie ein argumentatives Hemd", w2: "Die Gewalt übt Yoga an der Logik." },
-            { q: "Sveti Amsterdame, ti si plavi glupac.", a: "Heiliger Amsterdam, du bist ein blauer Idiot.", w1: "Heiliger Stadtplan, du bist blau vor Ideen", w2: "Du passt nicht ins Stadtbild." }
-        ];
+   const quizData = [
+    { q: "Pa jesmo li mi Corleoneovi?!", a: "Sind wir etwa die Corleones?!", w1: "Bin ich etwa Don Corleone?", w2: "Haben wir die Familie Corleoni im Kopf?" },
+    { q: "Reci mi molim te gdje ste mi se ispričali.", a: "Sag mir bitte, wo ihr euch bei mir entschuldigt habt.", w1: "Sag mir bitte, wo sich die Entschuldigung versteckt.", w2: "Zeige mir den Ort, an dem das Bedauern wohnt." },
+    { q: "Ne primam ga na bulju, i ne volim one koji ga primaju u bulju.", a: "Ich nehme ihn nicht als Gast auf und ich mag diejenigen nicht, die ihn als Gast aufnehmen.", w1: "Ich lade ihn nicht ins Sitzkissen der Götter.", w2: "Ich misstraue Menschen, die Argumente nutzen." },
+    { q: "Mi smo dio civilizirane velike Europe, velike scene.", a: "Wir sind Teil des zivilisierten Gross-Europas, der grossen Bühne.", w1: "Europa ist gross, weil der Vorhang der Nacht fällt.", w2: "Wir sind Statisten im Opernhaus der Welt." },
+    { q: "Kad radi Modrić?", a: "Wann arbeitet Modrić?", w1: "Wann arbeitet Modric an sich selbst?", w2: "Zu welcher Uhrzeit wird Modric müde?" },
+    { q: "Jebem vam mater svima!", a: "Ich ficke euch allen die Mutter!", w1: "Die Mutter aller Theorien applaudiert euch.", w2: "Ich umarme eure genealogische Mutter." },
+    { q: "Govna jedna, svi ste vi govna!", a: "Ihr seid allesamt Scheisse, nichts als Scheisse!", w1: "Ihr seid die Null, die den Abfall denkt.", w2: "Die Masse produziert sich selbst als Kot." },
+    { q: "Serem vam se u usta!", a: "Ich scheisse euch ins Maul!", w1: "Ich rezitiere aus meinem Mund ein Gedicht.", w2: "Der Mund wird zum Parlament der Mythen." },
+    { q: "Jebat ću vam mater do kraja života!", a: "Ich werde euch bis ans Lebensende die Mutter ficken!", w1: "Ich diskutiere eure Biografie bis zur Rente.", w2: "Die Ewigkeit heiratet den Stammbaum." },
+    { q: "Smradovi jedni, pička vam materina!", a: "Ihr Stinker, verfickte Hurensöhne!", w1: "Ihr seid olfaktorische Fussnoten der Natur.", w2: "Der Geruch denkt zuerst, dann kommt das Wort." },
+    { q: "Ko ste vi da mene sudite, jebem vam sve po spisku!", a: "Wer seid ihr, dass ihr über mich richtet? Ich ficke euch alles, was ihr habt!", w1: "Wer seid ihr, dass ihr den Richter träumt?", w2: "Die Liste verurteilt sich selbst alphabetisch." },
+    { q: "Ja sam za vas institucija, a vi ste goli kurac!", a: "Ich bin für euch eine Institution, und ihr seid ein nackter Schwanz!", w1: "Ich bin das Gebäude, ihr seid die Architekten.", w2: "Die Institution trägt keine Hosen, nur Stolz." },
+    { q: "Ne možete mi ništa, jebem vam državu!", a: "Ihr könnt mir nichts, ich ficke euren Staat!", w1: "Der Staat stolpert über seine eigenen Beine.", w2: "Nationale Souveränität ist ein leeres Wort." },
+    { q: "Svi ste vi obični klošari!", a: "Ihr seid allesamt gewöhnliche Penner!", w1: "Ihr seid Nomaden der Grammatik.", w2: "Das Gewöhnliche schläft unter der Brücke." },
+    { q: "Mrš u pičku materinu!", a: "Verpisst euch zur Hurenmutter!", w1: "Geh zurück in die Eizelle.", w2: "Verlasse den Satzbau über den Hinterausgang." },
+    { q: "Smeće jedno novinarsko!", a: "Journalistischer Abschaum!", w1: "Die Schlagzeile recycelt den Reporter.", w2: "Der Müll schreibt Leitartikel." },
+    { q: "Ja sam vas sve stvorio, govna nezahvalna!", a: "Ich habe euch alle erschaffen, undankbare Scheisskerle!", w1: "Ich habe euch im Seminar erfunden.", w2: "Der Schöpfer verlangt nach einer Oper." },
+    { q: "Jebem te na klinac.", a: "Du bist mir völlig egal.", w1: "Ich hänge dich an den Nagel der Bedeutung.", w2: "Der Keil denkt dich weg." },
+    { q: "Prebit ću te kao mačku.", a: "Ich werde dich verprügeln wie eine Katze.", w1: "Ich falte dich wie ein argumentatives Hemd.", w2: "Die Gewalt übt Yoga an der Logik." },
+    { q: "Sveti Amsterdame, ti si plavi glupac.", a: "Heiliger Amsterdam, du bist ein blauer Idiot.", w1: "Heiliger Stadtplan, du bist blau vor Ideen.", w2: "Du passt nicht ins Stadtbild." }
+];
 
         let currentQuestionIdx = 0;
         let score = 0;
